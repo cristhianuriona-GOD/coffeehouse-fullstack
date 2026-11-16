@@ -1,0 +1,21 @@
+import 'dotenv/config';
+import cors from 'cors';
+import express from 'express';
+import rateLimit from 'express-rate-limit';
+import { errorHandler, notFound } from './middleware/error.middleware.js';
+import contentRoutes from './routes/content.routes.js';
+import contactRoutes from './routes/contact.routes.js';
+import chatbotRoutes from './routes/chatbot.routes.js';
+
+const app = express();
+const port = process.env.PORT || 3000;
+app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:4200' }));
+app.use(express.json({ limit: '64kb' }));
+app.use('/api', rateLimit({ windowMs: 15 * 60 * 1000, max: 250, standardHeaders: true, legacyHeaders: false }));
+app.get('/api/health', (_req, res) => res.json({ ok: true }));
+app.use('/api', contentRoutes);
+app.use('/api', contactRoutes);
+app.use('/api', chatbotRoutes);
+app.use(notFound);
+app.use(errorHandler);
+app.listen(port, () => console.log(`CoffeeHouse API lista en http://localhost:${port}`));

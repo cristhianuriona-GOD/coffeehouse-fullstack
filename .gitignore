@@ -1,0 +1,6 @@
+node_modules/
+dist/
+.angular/
+.env
+*.log
+frontend/src/assets/coffee-hero.mp4

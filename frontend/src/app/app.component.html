@@ -1,0 +1,28 @@
+<header class="nav">
+  <a class="brand" (click)="scroll('inicio')"><i></i>CoffeeHouse</a>
+  <button class="menu-btn" (click)="menuOpen = !menuOpen" aria-label="Abrir menú">☰</button>
+  <nav [class.open]="menuOpen"><button (click)="scroll('inicio')">Inicio</button><button (click)="scroll('servicios')">Servicios</button><button (click)="scroll('especialidades')">Especialidades</button><button (click)="scroll('nosotros')">Nosotros</button><button (click)="scroll('precios')">Precios</button><button (click)="scroll('contacto')">Contacto</button></nav>
+</header>
+
+<main>
+  <section id="inicio" class="hero">
+    <div class="hero-media"><video autoplay muted loop playsinline poster="https://images.pexels.com/photos/302899/pexels-photo-302899.jpeg"><source src="assets/coffee-hero.mp4" type="video/mp4"></video></div>
+    <div class="hero-content"><p class="eyebrow">Cochabamba · Bolivia</p><h1>El mejor <em>café</em><br>de la ciudad.</h1><p class="lead">Calidad, sabor y experiencia en cada taza.</p><button class="gold-button" (click)="scroll('precios')">Explorar menú <span>→</span></button></div>
+    <a class="scroll-cue" (click)="scroll('servicios')">Descubre más <span>↓</span></a>
+  </section>
+
+  <section id="servicios" class="section surface"><div class="section-heading"><p class="eyebrow">Lo que hacemos</p><h2>Momentos hechos con <em>detalle.</em></h2></div><div class="service-grid"><article *ngFor="let service of services" class="service-card"><span>{{ service.icono }}</span><h3>{{ service.nombre }}</h3><p>{{ service.descripcion }}</p></article></div></section>
+
+  <section id="especialidades" class="section specialties"><div class="section-heading centered"><p class="eyebrow">Favoritos de la casa</p><h2>Nuestras <em>especialidades.</em></h2></div><div class="specialty-grid"><article *ngFor="let item of specialties"><img [src]="item.imagen_url" [alt]="item.nombre"><div><p class="eyebrow">Selección CoffeeHouse</p><h3>{{ item.nombre }}</h3><p>{{ item.descripcion }}</p></div></article></div></section>
+
+  <section id="nosotros" class="section about"><div class="about-image"><img [src]="about?.url_foto_tienda" alt="Interior de CoffeeHouse"></div><div><p class="eyebrow">Nuestra historia</p><h2>Una pausa que sabe a <em>casa.</em></h2><p class="body-copy">{{ about?.historia || 'Cargando nuestra historia…' }}</p><div class="about-details"><p><b>Encuéntranos</b>{{ about?.direccion }}</p><p><b>Llámanos</b>{{ about?.telefono }}</p></div></div></section>
+
+  <section id="precios" class="section menu"><div class="section-heading centered"><p class="eyebrow">Carta</p><h2>Sabores que invitan a <em>volver.</em></h2></div><div class="price-grid"><div *ngFor="let group of groupedPrices()" class="price-group"><h3>{{ group.category }}</h3><div *ngFor="let item of group.items" class="price-row"><span>{{ item.producto }}</span><i></i><b>Bs {{ item.precio | number:'1.2-2' }}</b></div></div></div></section>
+
+  <section id="contacto" class="section contact"><div><p class="eyebrow">Hablemos</p><h2>Tu mesa te <em>espera.</em></h2><p class="body-copy">¿Tienes una consulta, quieres reservar un evento o compartir una idea? Escríbenos.</p><a [href]="'tel:' + about?.telefono">{{ about?.telefono }}</a></div><form [formGroup]="contactForm" (ngSubmit)="sendContact()"><label>Nombre<input formControlName="nombre" placeholder="Tu nombre"></label><label>Correo electrónico<input type="email" formControlName="email" placeholder="tu@email.com"></label><label>Mensaje<textarea formControlName="mensaje" rows="4" placeholder="¿Cómo podemos ayudarte?"></textarea></label><button class="gold-button" type="submit">Enviar mensaje <span>→</span></button><p class="form-status" aria-live="polite">{{ contactStatus }}</p></form></section>
+</main>
+
+<footer><a class="brand"><i></i>CoffeeHouse</a><span>Hecho para compartir buenos cafés.</span><a href="https://www.pexels.com/video/close-up-of-a-barista-making-coffee-8430960/" target="_blank" rel="noopener">Vídeo: Ron Lach / Pexels</a></footer>
+
+<button class="chat-fab" (click)="chatOpen = !chatOpen" [attr.aria-label]="chatOpen ? 'Cerrar chat' : 'Abrir chat'">{{ chatOpen ? '×' : '✦' }}</button>
+<aside class="chat-window" [class.visible]="chatOpen"><div class="chat-title"><div><small>Asistente CoffeeHouse</small><b>Barista</b></div><span>● En línea</span></div><div class="messages"><p *ngFor="let message of messages" [class.user]="message.role === 'user'">{{ message.content }}</p><p *ngIf="sending" class="typing">Barista está pensando…</p></div><form [formGroup]="chatForm" (ngSubmit)="sendChat()"><input formControlName="message" placeholder="Escribe tu pregunta…" aria-label="Mensaje para Barista"><button type="submit" aria-label="Enviar">↑</button></form></aside>
